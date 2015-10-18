@@ -2,8 +2,8 @@
 ffi = require "ffi"
 
 ffi.cdef [[
-  typedef void ColorMapObject;
   typedef void ExtensionBlock;
+  typedef void GifColorType;
 
   typedef unsigned char GifPixelType;
   typedef unsigned char *GifRowType;
@@ -11,10 +11,18 @@ ffi.cdef [[
   typedef unsigned int GifPrefixType;
   typedef int GifWord;
 
+  typedef struct ColorMapObject {
+    int ColorCount;
+    int BitsPerPixel;
+    bool SortFlag;
+    GifColorType *Colors;    /* on malloc(3) heap */
+  } ColorMapObject;
+
+
   typedef struct GifImageDesc {
-      GifWord Left, Top, Width, Height;   /* Current image dimensions. */
-      bool Interlace;                     /* Sequential/Interlaced lines. */
-      ColorMapObject *ColorMap;           /* The local color map */
+    GifWord Left, Top, Width, Height;   /* Current image dimensions. */
+    bool Interlace;                     /* Sequential/Interlaced lines. */
+    ColorMapObject *ColorMap;           /* The local color map */
   } GifImageDesc;
 
   typedef struct SavedImage {
@@ -44,8 +52,12 @@ ffi.cdef [[
   const char *GifErrorString(int ErrorCode);
   GifFileType *DGifOpenFileName(const char *GifFileName, int *Error);
   int DGifCloseFile(GifFileType * GifFile, int *ErrorCode);
-
   int DGifSlurp(GifFileType * GifFile);
+
+  GifFileType *EGifOpenFileName(const char *GifFileName, const bool GifTestExistence, int *Error);
+  ColorMapObject *GifMakeMapObject(int ColorCount, const GifColorType *ColorMap);
+  SavedImage *GifMakeSavedImage(GifFileType *GifFile, const SavedImage *CopyFrom);
+  int EGifSpew(GifFileType * GifFile);
 ]]
 
 lib = ffi.load "libgif"
@@ -55,13 +67,30 @@ assert_error = (status) ->
   error ffi.string lib.GifErrorString status
 
 err = ffi.new("int[1]", 0)
-gif = lib.DGifOpenFileName "tiny.gif", err
+source = lib.DGifOpenFileName "test.gif", err
 assert_error err[0]
 
-lib.DGifSlurp gif
+lib.DGifSlurp source
 
-{:Left, :Top, :Width, :Height} = gif.SavedImages[0].ImageDesc
+print "source ImageCount", source.ImageCount
+print "source ExtensionBlockCount", source.ExtensionBlockCount
+
+{:Left, :Top, :Width, :Height} = source.SavedImages[0].ImageDesc
 print "left: #{Left}, top: #{Top}, width: #{Width}, height: #{Height}"
 
-frame = gif.SavedImages[0]
-print frame.RasterBits[0], frame.RasterBits[1], frame.RasterBits[2], frame.RasterBits[3]
+dest = lib.EGifOpenFileName "test.out.gif", false, err
+assert_error err[0]
+
+for f in *{"SWidth", "SHeight", "SColorResolution", "SBackGroundColor"}
+  dest[f] = source[f]
+
+dest.SColorMap = lib.GifMakeMapObject source.SColorMap.ColorCount, source.SColorMap.Colors
+
+lib.GifMakeSavedImage dest, source.SavedImages[0]
+
+print "dest ImageCount", dest.ImageCount
+print "dest ExtensionBlockCount", dest.ExtensionBlockCount
+
+print lib.EGifSpew dest
+
+
