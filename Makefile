@@ -1,8 +1,7 @@
 .PHONY: build test dump
 
-
 test: build
-	luajit giflib.lua
+	luajit test.lua
 
 build:
 	moonc .
@@ -10,4 +9,3 @@ build:
 dump:
 	cat test.gif | giftool -f '%n: %s (%p)\n'
 
-	
