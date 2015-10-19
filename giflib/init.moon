@@ -2,14 +2,27 @@
 ffi = require "ffi"
 lib = require "giflib.lib"
 
-free_dgif = (gif) ->
-  print "Freeing dgif"
-  err = ffi.new "int[1]", 0
-  lib.DGifCloseFile gif, err
+GIF_ERROR = 0
+GIF_OK = 1
+
+raise_error = (status) ->
+  if status == 0
+    error "There was an error"
+  else
+    error ffi.string lib.GifErrorString status
 
 assert_error = (status) ->
   return true if status == 0
-  error ffi.string lib.GifErrorString status
+  raise_error status
+
+free_dgif = (gif) ->
+  print "Freeing dgif"
+  err = ffi.new "int[1]", 0
+  if lib.DGifCloseFile(gif, err) == GIF_ERROR
+    raise_error err[0]
+  else
+    print "freed"
+    true
 
 class DecodedGif
   new: (gif) =>
@@ -21,7 +34,7 @@ class DecodedGif
 
   close: =>
     ffi.gc @gif, nil
-    free_dgif gif
+    free_dgif @gif
 
   dimensions: =>
     {:Width, :Height} = gif.SavedImages[0].ImageDesc
@@ -43,13 +56,12 @@ class DecodedGif
 
     lib.GifMakeSavedImage dest, @gif.SavedImages[0]
 
-    if 1 == lib.EGifSpew dest
+    if lib.EGifSpew(dest) == GIF_OK
       -- spew closes file and cleans memory
       ffi.gc dest, nil
       true
     else
       nil, "failed to spew gif"
-
 
 open_gif = (fname) ->
   err = ffi.new "int[1]", 0
