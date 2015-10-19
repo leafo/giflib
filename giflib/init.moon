@@ -37,7 +37,7 @@ class DecodedGif
     free_dgif @gif
 
   dimensions: =>
-    {:Width, :Height} = gif.SavedImages[0].ImageDesc
+    {:Width, :Height} = @gif.SavedImages[0].ImageDesc
     Width, Height
 
   -- write the first frame of image to file

@@ -9,3 +9,5 @@ build:
 dump:
 	cat test.gif | giftool -f '%n: %s (%p)\n'
 
+lint: build
+	moonc -l giflib
