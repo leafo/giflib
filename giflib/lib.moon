@@ -57,6 +57,7 @@ ffi.cdef [[
   ColorMapObject *GifMakeMapObject(int ColorCount, const GifColorType *ColorMap);
   SavedImage *GifMakeSavedImage(GifFileType *GifFile, const SavedImage *CopyFrom);
   int EGifSpew(GifFileType * GifFile);
+  int EGifCloseFile(GifFileType *GifFile);
 ]]
 
 ffi.load "libgif"
