@@ -1,6 +1,8 @@
 ffi = require "ffi"
 
 ffi.cdef [[
+  void *malloc(size_t size);
+
   typedef void ExtensionBlock;
   typedef void GifColorType;
 
@@ -9,6 +11,7 @@ ffi.cdef [[
   typedef unsigned char GifByteType;
   typedef unsigned int GifPrefixType;
   typedef int GifWord;
+
 
   typedef enum {
     UNDEFINED_RECORD_TYPE,
