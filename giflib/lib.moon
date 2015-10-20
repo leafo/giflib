@@ -3,7 +3,6 @@ ffi = require "ffi"
 ffi.cdef [[
   void *malloc(size_t size);
 
-  typedef void ExtensionBlock;
   typedef void GifColorType;
 
   typedef unsigned char GifPixelType;
@@ -11,7 +10,6 @@ ffi.cdef [[
   typedef unsigned char GifByteType;
   typedef unsigned int GifPrefixType;
   typedef int GifWord;
-
 
   typedef enum {
     UNDEFINED_RECORD_TYPE,
@@ -21,13 +19,18 @@ ffi.cdef [[
     TERMINATE_RECORD_TYPE   /* Begin with ';' */
   } GifRecordType;
 
+  typedef struct ExtensionBlock {
+    int ByteCount;
+    GifByteType *Bytes; /* on malloc(3) heap */
+    int Function;       /* The block function code */
+  } ExtensionBlock;
+
   typedef struct ColorMapObject {
     int ColorCount;
     int BitsPerPixel;
     bool SortFlag;
     GifColorType *Colors;    /* on malloc(3) heap */
   } ColorMapObject;
-
 
   typedef struct GifImageDesc {
     GifWord Left, Top, Width, Height;   /* Current image dimensions. */
@@ -57,7 +60,6 @@ ffi.cdef [[
     void *UserData;                  /* hook to attach user data (TVT) */
     void *Private;                   /* Don't mess with this! */
   } GifFileType;
-
 
   const char *GifErrorString(int ErrorCode);
   GifFileType *DGifOpenFileName(const char *GifFileName, int *Error);

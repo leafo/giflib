@@ -11,14 +11,21 @@ get_memory = ->
   kb = mem\match "(%d+)"
   ("%.3f mb")\format (tonumber(kb) / 1024)
 
+CONTINUE_EXT_FUNC_CODE = 0x00
+COMMENT_EXT_FUNC_CODE = 0xfe
+GRAPHICS_EXT_FUNC_CODE = 0xf9
+PLAINTEXT_EXT_FUNC_CODE = 0x01
+APPLICATION_EXT_FUNC_CODE = 0xff
+
 -- while true
 start = socket.gettime!
 gif = open_gif "test.gif"
-gif\slurp_first_frame!
+assert gif\slurp_first_frame!
+-- gif\slurp!
 
+gif\write_first_frame "test.out.gif"
+gif\close!
 
---gif\write_first_frame "test.out.gif"
---gif\close!
 stop = socket.gettime!
 print "Elapsed: #{(stop - start) * 1000}, #{get_memory!}"
 
