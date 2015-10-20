@@ -10,6 +10,14 @@ ffi.cdef [[
   typedef unsigned int GifPrefixType;
   typedef int GifWord;
 
+  typedef enum {
+    UNDEFINED_RECORD_TYPE,
+    SCREEN_DESC_RECORD_TYPE,
+    IMAGE_DESC_RECORD_TYPE, /* Begin with ',' */
+    EXTENSION_RECORD_TYPE,  /* Begin with '!' */
+    TERMINATE_RECORD_TYPE   /* Begin with ';' */
+  } GifRecordType;
+
   typedef struct ColorMapObject {
     int ColorCount;
     int BitsPerPixel;
@@ -60,6 +68,13 @@ ffi.cdef [[
   int EGifCloseFile(GifFileType *GifFile, int *ErrorCode);
 
   void GifFreeSavedImages(GifFileType *GifFile);
+
+  int DGifGetRecordType(GifFileType *GifFile, GifRecordType *GifType);
+  int DGifGetLine(GifFileType *GifFile, GifPixelType *GifLine, int GifLineLen);
+  int DGifGetImageDesc(GifFileType *GifFile);
+  int DGifGetExtension(GifFileType *GifFile, int *GifExtCode, GifByteType **GifExtension);
+  int DGifGetExtensionNext(GifFileType *GifFile, GifByteType **GifExtension);
+  int GifAddExtensionBlock(int *ExtensionBlock_Count, ExtensionBlock **ExtensionBlocks, int Function, unsigned int Len, unsigned char ExtData[]);
 ]]
 
 ffi.load "libgif"
