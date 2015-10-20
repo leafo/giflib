@@ -156,13 +156,17 @@ class DecodedGif
 
     dest.SColorMap = lib.GifMakeMapObject @gif.SColorMap.ColorCount, @gif.SColorMap.Colors
 
-    -- spew does does not free the memory of the saved images so we use the
-    -- same reference managed by the decoded gif
-    saved_images = ffi.new "SavedImage[1]"
-    saved_images[0] = @gif.SavedImages[0]
+    copy_images = 1
+
+    -- spew/egifclosefile does does not free the memory of the saved images so
+    -- we use the same reference managed by the decoded gif, and an array
+    -- garbage collected by us
+    saved_images = ffi.new "SavedImage[?]", copy_images
+    for i=0,copy_images - 1, 1
+      saved_images[i] = @gif.SavedImages[i]
 
     dest.SavedImages = saved_images
-    dest.ImageCount = 1
+    dest.ImageCount = copy_images
 
     if lib.EGifSpew(dest) == GIF_OK
       ffi.gc dest, nil
