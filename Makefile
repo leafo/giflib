@@ -4,7 +4,7 @@ test: build
 	luajit test.lua
 
 build:
-	moonc .
+	moonc giflib.moon giflib
 
 local: build
 	luarocks make --local giflib-dev-1.rockspec

@@ -136,6 +136,9 @@ class DecodedGif
     ffi.gc @gif, nil
     close_dgif @gif
 
+  image_count: =>
+    @gif.ImageCount
+
   dimensions: =>
     {:Width, :Height} = @gif.SavedImages[0].ImageDesc
     Width, Height

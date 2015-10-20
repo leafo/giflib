@@ -11,15 +11,16 @@ get_memory = ->
   kb = mem\match "(%d+)"
   ("%.3f mb")\format (tonumber(kb) / 1024)
 
-CONTINUE_EXT_FUNC_CODE = 0x00
-COMMENT_EXT_FUNC_CODE = 0xfe
-GRAPHICS_EXT_FUNC_CODE = 0xf9
-PLAINTEXT_EXT_FUNC_CODE = 0x01
-APPLICATION_EXT_FUNC_CODE = 0xff
+
+get_memory = ->
+  f = io.open "/proc/self/statm", "r"
+  out = f\read "*a"
+  f\close!
+  out
 
 -- while true
 start = socket.gettime!
-gif = open_gif "test.gif"
+gif = open_gif "interlace.gif"
 assert gif\slurp_first_frame!
 -- gif\slurp!
 
