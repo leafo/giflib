@@ -15,18 +15,24 @@ assert_error = (status) ->
   return true if status == 0
   raise_error status
 
-free_dgif = (gif) ->
-  print "Freeing dgif"
+close_dgif = (gif) ->
   err = ffi.new "int[1]", 0
   if lib.DGifCloseFile(gif, err) == GIF_ERROR
     raise_error err[0]
   else
-    print "freed"
+    true
+
+close_egif = (gif) ->
+  print "closing egif..."
+  err = ffi.new "int[1]", 0
+  if lib.EGifCloseFile(gif, err) == GIF_ERROR
+    raise_error err[0]
+  else
     true
 
 class DecodedGif
   new: (gif) =>
-    @gif = ffi.gc gif, free_dgif
+    @gif = ffi.gc gif, close_dgif
 
   slurp: =>
     @slurped = true
@@ -34,7 +40,7 @@ class DecodedGif
 
   close: =>
     ffi.gc @gif, nil
-    free_dgif @gif
+    close_dgif @gif
 
   dimensions: =>
     {:Width, :Height} = @gif.SavedImages[0].ImageDesc
@@ -47,17 +53,20 @@ class DecodedGif
     err = ffi.new "int[1]", 0
     dest = lib.EGifOpenFileName fname, false, err
     assert_error err[0]
-    dest = ffi.gc dest, lib.EGifCloseFile
+    dest = ffi.gc dest, close_egif
 
     for f in *{"SWidth", "SHeight", "SColorResolution", "SBackGroundColor"}
       dest[f] = @gif[f]
 
     dest.SColorMap = lib.GifMakeMapObject @gif.SColorMap.ColorCount, @gif.SColorMap.Colors
 
-    lib.GifMakeSavedImage dest, @gif.SavedImages[0]
+    saved_images = ffi.new "SavedImage[1]"
+    saved_images[0] = @gif.SavedImages[0]
+
+    dest.SavedImages = saved_images
+    dest.ImageCount = 1
 
     if lib.EGifSpew(dest) == GIF_OK
-      -- spew closes file and cleans memory
       ffi.gc dest, nil
       true
     else
@@ -72,4 +81,4 @@ open_gif = (fname) ->
   gif
 
 
-{:open_gif}
+{ :open_gif, :DecodedGif }
