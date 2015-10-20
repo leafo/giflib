@@ -74,7 +74,14 @@ class DecodedGif
             return nil, "failed to alloc memory"
 
           if saved_image.ImageDesc.Interlace
-            error "TODO: handle intelace gif"
+            interlaced_offset = {0, 4, 2, 1}
+            interlaced_jumps = {8, 8, 4, 2}
+            for i=1,4
+              for j=interlaced_offset[i], saved_image.ImageDesc.Height - 1, interlaced_jumps[i]
+                if GIF_ERROR == lib.DGifGetLine @gif,
+                    saved_image.RasterBits + j * saved_image.ImageDesc.Width,
+                    saved_image.ImageDesc.Width
+                  return nil, "failed reading interlaced image"
           else
             if GIF_ERROR == lib.DGifGetLine @gif, saved_image.RasterBits, image_size
               return nil, "failed to read raster bits"
