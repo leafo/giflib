@@ -39,3 +39,10 @@ describe "giflib", ->
     assert.same 406, h
     assert.same 1, gif\image_count!
 
+  it "fails to open invalid file", ->
+    res = { open_gif "spec/giflib_spec.moon" }
+    assert.same {
+      nil
+      "Data is not in GIF format"
+    }, res
+

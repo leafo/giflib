@@ -7,15 +7,14 @@ GIF_OK = 1
 CONTINUE_EXT_FUNC_CODE = 0x00
 INT_MAX = 2147483647
 
-raise_error = (status) ->
+get_error = (status) ->
   if status == 0
-    error "There was an error"
+    "There was an error"
   else
-    error ffi.string lib.GifErrorString status
+    ffi.string lib.GifErrorString status
 
-assert_error = (status) ->
-  return true if status == 0
-  raise_error status
+raise_error = (status) ->
+  error get_error status
 
 close_dgif = (gif) ->
   err = ffi.new "int[1]", 0
@@ -151,7 +150,10 @@ class DecodedGif
 
     err = ffi.new "int[1]", 0
     dest = lib.EGifOpenFileName fname, false, err
-    assert_error err[0]
+
+    if dest == nil
+      return nil, get_error err[0]
+
     dest = ffi.gc dest, close_egif
 
     for f in *{"SWidth", "SHeight", "SColorResolution", "SBackGroundColor"}
@@ -180,7 +182,10 @@ class DecodedGif
 open_gif = (fname) ->
   err = ffi.new "int[1]", 0
   gif = lib.DGifOpenFileName fname, err
-  assert_error err[0]
+
+  if gif == nil
+    return nil, get_error err[0]
+
   gif = DecodedGif gif
   gif
 
