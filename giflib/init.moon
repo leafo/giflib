@@ -36,7 +36,10 @@ class DecodedGif
 
   slurp: =>
     @slurped = true
-    lib.DGifSlurp @gif
+    if GIF_ERROR == lib.DGifSlurp @gif
+      return nil, get_error @gif.Error
+
+    true
 
   -- only read enought to get first frame
   slurp_first_frame: =>

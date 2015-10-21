@@ -46,3 +46,22 @@ describe "giflib", ->
       "Data is not in GIF format"
     }, res
 
+
+  it "fails to boken file when slurping", ->
+    gif = open_gif "spec/inputs/broke.gif"
+    assert.same {
+      nil
+      "Failed to read from given file"
+    }, { gif\slurp! }
+
+    gif\close!
+
+  it "fails to boken file when slurping first frame", ->
+    gif = open_gif "spec/inputs/broke.gif"
+    assert.same {
+      nil
+      "failed to read raster bits"
+    }, { gif\slurp_first_frame! }
+
+    gif\close! -- ensure we can still close even with partial load
+
