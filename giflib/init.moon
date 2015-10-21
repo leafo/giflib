@@ -148,7 +148,6 @@ class DecodedGif
   -- write the first frame of image to file
   write_first_frame: (fname) =>
     @slurp! unless @slurped
-
     return nil, "no images in gif" unless @gif.ImageCount > 0
 
     err = ffi.new "int[1]", 0
@@ -162,7 +161,8 @@ class DecodedGif
     for f in *{"SWidth", "SHeight", "SColorResolution", "SBackGroundColor"}
       dest[f] = @gif[f]
 
-    dest.SColorMap = lib.GifMakeMapObject @gif.SColorMap.ColorCount, @gif.SColorMap.Colors
+    unless @gif.SColorMap == nil
+      dest.SColorMap = lib.GifMakeMapObject @gif.SColorMap.ColorCount, @gif.SColorMap.Colors
 
     copy_images = 1
 
