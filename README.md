@@ -1,5 +1,7 @@
 # giflib
 
+[![Build Status](https://travis-ci.org/leafo/giflib.svg?branch=master)](https://travis-ci.org/leafo/giflib)
+
 Lua bindings to [GIFLIB](http://giflib.sourceforge.net/) for LuaJIT using FFI.
 
 ## Installation
