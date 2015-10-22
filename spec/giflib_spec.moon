@@ -1,12 +1,12 @@
 
-import open_gif from require "giflib"
+import load_gif from require "giflib"
 
 describe "giflib", ->
   it "opens a gif", ->
-    gif = open_gif "spec/inputs/regular.gif"
+    gif = load_gif "spec/inputs/regular.gif"
 
   it "slurps entire gif", ->
-    gif = open_gif "spec/inputs/regular.gif"
+    gif = load_gif "spec/inputs/regular.gif"
     gif\slurp!
 
     w, h = gif\dimensions!
@@ -15,12 +15,12 @@ describe "giflib", ->
     assert.same 68, gif\image_count!
 
   it "closes a gif after slurp", ->
-    gif = open_gif "spec/inputs/regular.gif"
+    gif = load_gif "spec/inputs/regular.gif"
     gif\slurp!
     gif\close!
 
   it "slurps first frame", ->
-    gif = open_gif "spec/inputs/regular.gif"
+    gif = load_gif "spec/inputs/regular.gif"
 
     assert gif\slurp_first_frame!
 
@@ -30,7 +30,7 @@ describe "giflib", ->
     assert.same 1, gif\image_count!
 
   it "slurps first frame of interlace gif", ->
-    gif = open_gif "spec/inputs/interlace.gif"
+    gif = load_gif "spec/inputs/interlace.gif"
 
     assert gif\slurp_first_frame!
 
@@ -40,7 +40,7 @@ describe "giflib", ->
     assert.same 1, gif\image_count!
 
   it "fails to open invalid file", ->
-    res = { open_gif "spec/giflib_spec.moon" }
+    res = { load_gif "spec/giflib_spec.moon" }
     assert.same {
       nil
       "Data is not in GIF format"
@@ -48,7 +48,7 @@ describe "giflib", ->
 
 
   it "fails to boken file when slurping", ->
-    gif = open_gif "spec/inputs/broke.gif"
+    gif = load_gif "spec/inputs/broke.gif"
     assert.same {
       nil
       "Failed to read from given file"
@@ -57,7 +57,7 @@ describe "giflib", ->
     gif\close!
 
   it "fails to boken file when slurping first frame", ->
-    gif = open_gif "spec/inputs/broke.gif"
+    gif = load_gif "spec/inputs/broke.gif"
     assert.same {
       nil
       "failed to read raster bits"

@@ -211,8 +211,8 @@ do
   _base_0.__class = _class_0
   DecodedGif = _class_0
 end
-local open_gif
-open_gif = function(fname)
+local load_gif
+load_gif = function(fname)
   local err = ffi.new("int[1]", 0)
   local gif = lib.DGifOpenFileName(fname, err)
   if gif == nil then
@@ -222,6 +222,6 @@ open_gif = function(fname)
   return gif
 end
 return {
-  open_gif = open_gif,
+  load_gif = load_gif,
   DecodedGif = DecodedGif
 }

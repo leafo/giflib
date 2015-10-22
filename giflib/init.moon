@@ -182,7 +182,7 @@ class DecodedGif
     else
       nil, "failed to spew gif"
 
-open_gif = (fname) ->
+load_gif = (fname) ->
   err = ffi.new "int[1]", 0
   gif = lib.DGifOpenFileName fname, err
 
@@ -193,4 +193,4 @@ open_gif = (fname) ->
   gif
 
 
-{ :open_gif, :DecodedGif }
+{ :load_gif, :DecodedGif }
