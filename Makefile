@@ -1,4 +1,4 @@
-.PHONY: build test dump
+.PHONY: build test dump lint valgrind
 
 test: build
 	luajit test.lua
@@ -14,3 +14,7 @@ dump:
 
 lint: build
 	moonc -l giflib
+
+valgrind:
+	valgrind --leak-check=yes --trace-children=yes busted
+
