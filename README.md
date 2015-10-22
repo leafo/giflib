@@ -23,9 +23,9 @@ entire GIFLIB API. Feel free to create an issue if there's something specific
 you need.
 
 ```lua
-import load_gif from require "giflib"
+local giflib = require("giflib")
 
-local gif = assert(load_gif("test.gif"))
+local gif = assert(giflib.load_gif("test.gif"))
 gif:write_first_frame("test-frame-1.gif")
 gif:close()
 ```
