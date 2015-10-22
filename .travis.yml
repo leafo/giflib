@@ -1,9 +1,11 @@
 language: c
 
 install:
+  - sudo add-apt-repository ppa:team-xbmc/xbmc-ppa-build-depends -y
+  - sudo apt-get update -q
   - sudo apt-get install luajit
   - sudo apt-get install luarocks
-  - sudo apt-get install libgif-dev
+  - sudo apt-get install giflib
   - sudo luarocks install moonscript
   - sudo luarocks install https://luarocks.org/manifests/olivine-labs/busted-2.0.rc7-0.rockspec
   - cat $(which busted) | sed 's/\/usr\/bin\/lua/\/usr\/bin\/luajit-2.0.0-beta9/' > busted
