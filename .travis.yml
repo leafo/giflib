@@ -1,11 +1,14 @@
 language: c
 
 install:
-  - sudo add-apt-repository ppa:team-xbmc/xbmc-ppa-build-depends -y
-  - sudo apt-get update -q
+  # - sudo add-apt-repository ppa:team-xbmc/xbmc-ppa-build-depends -y
+  # - sudo apt-get update -q
   - sudo apt-get install luajit
   - sudo apt-get install luarocks
-  - sudo apt-get install giflib
+  # - sudo apt-get install giflib
+  - wget "https://launchpad.net/~wsnipex/+archive/ubuntu/kodi-git/+build/6689005/+files/libgif5_5.0.5-1~precise_amd64.deb"
+  - ls
+  - sudo dpkg -i 'libgif5_5.0.5-1~precise_amd64.deb'
   - sudo luarocks install moonscript
   - sudo luarocks install https://luarocks.org/manifests/olivine-labs/busted-2.0.rc7-0.rockspec
   - cat $(which busted) | sed 's/\/usr\/bin\/lua/\/usr\/bin\/luajit-2.0.0-beta9/' > busted
