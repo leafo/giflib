@@ -65,3 +65,19 @@ describe "giflib", ->
 
     gif\close! -- ensure we can still close even with partial load
 
+  it "write first frame with default slurp", ->
+    gif = load_gif "spec/inputs/regular.gif"
+    gif\write_first_frame "spec/outputs/frame.gif"
+
+  it "write first frame with full slurp", ->
+    gif = load_gif "spec/inputs/regular.gif"
+    assert gif\slurp!
+    gif\write_first_frame "spec/outputs/frame.gif"
+
+  it "write first frame with full slurp", ->
+    gif = load_gif "spec/inputs/regular.gif"
+    assert gif\slurp_first_frame!
+    gif\write_first_frame "spec/outputs/frame.gif"
+
+
+

@@ -1,7 +1,7 @@
 
 socket = require "socket"
 
-import open_gif, DecodedGif from require "giflib"
+import load_gif, DecodedGif from require "giflib"
 
 get_memory = ->
   f = io.open "/proc/self/status", "r"
@@ -20,7 +20,7 @@ get_memory = ->
 
 -- while true
 start = socket.gettime!
-gif = open_gif "interlace.gif"
+gif = load_gif "interlace.gif"
 assert gif\slurp_first_frame!
 -- gif\slurp!
 

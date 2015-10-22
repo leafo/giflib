@@ -154,7 +154,7 @@ do
     end,
     write_first_frame = function(self, fname)
       if not (self.slurped) then
-        self:slurp()
+        self:slurp_first_frame()
       end
       if not (self.gif.ImageCount > 0) then
         return nil, "no images in gif"

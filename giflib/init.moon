@@ -147,7 +147,7 @@ class DecodedGif
 
   -- write the first frame of image to file
   write_first_frame: (fname) =>
-    @slurp! unless @slurped
+    @slurp_first_frame! unless @slurped
     return nil, "no images in gif" unless @gif.ImageCount > 0
 
     err = ffi.new "int[1]", 0
