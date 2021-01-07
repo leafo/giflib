@@ -25,8 +25,8 @@ jobs:
         wget http://downloads.sourceforge.net/project/giflib/giflib-5.1.1.tar.bz2
         tar jxf giflib-5.1.1.tar.bz2
         (cd giflib-5.1.1; ./configure; make)
-        sudo luarocks install moonscript
-        sudo luarocks install busted
+        luarocks install moonscript
+        luarocks install busted
         moonc .
 
     - name: test
