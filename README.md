@@ -1,6 +1,6 @@
 # giflib
 
-[![Build Status](https://travis-ci.org/leafo/giflib.svg?branch=master)](https://travis-ci.org/leafo/giflib)
+![test](https://github.com/leafo/giflib/workflows/test/badge.svg)
 
 Lua bindings to [GIFLIB](http://giflib.sourceforge.net/) for LuaJIT using FFI.
 
