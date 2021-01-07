@@ -1,0 +1,35 @@
+name: test
+
+on: [push]
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        luaVersion: ["luajit-openresty", "luajit"]
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@master
+
+    - uses: leafo/gh-actions-lua@master
+      with:
+        luaVersion: ${{ matrix.luaVersion }}
+
+    - uses: leafo/gh-actions-luarocks@master
+
+    - name: build
+      run: |
+        wget http://downloads.sourceforge.net/project/giflib/giflib-5.1.1.tar.bz2
+        tar jxf giflib-5.1.1.tar.bz2
+        (cd giflib-5.1.1; ./configure; make)
+        sudo luarocks install moonscript
+        sudo luarocks install busted
+        moonc .
+
+    - name: test
+      run: |
+        busted -o utfTerminal
+
