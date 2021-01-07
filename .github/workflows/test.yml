@@ -31,5 +31,5 @@ jobs:
 
     - name: test
       run: |
-        busted -o utfTerminal
+        LD_LIBRARY_PATH=giflib-5.1.1/lib/.libs/ busted -o utfTerminal
 
