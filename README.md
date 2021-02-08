@@ -15,7 +15,7 @@ $ sudo pacman -Sy luajit giflib
 It's recommended to use LuaRocks to install **giflib**.
 
 ```bash
-$ luarocks install --server=http://luarocks.org/dev giflib
+$ luarocks install giflib
 ```
 
 ## Basic Usage
