@@ -1,3 +1,4 @@
+local VERSION = "1.0.0"
 local ffi = require("ffi")
 local lib = require("giflib.lib")
 local GIF_ERROR = 0
@@ -36,6 +37,7 @@ close_egif = function(gif)
 end
 local DecodedGif
 do
+  local _class_0
   local _base_0 = {
     slurp = function(self)
       self.slurped = true
@@ -194,7 +196,7 @@ do
     end
   }
   _base_0.__index = _base_0
-  local _class_0 = setmetatable({
+  _class_0 = setmetatable({
     __init = function(self, gif)
       self.gif = ffi.gc(gif, close_dgif)
     end,
@@ -223,5 +225,6 @@ load_gif = function(fname)
 end
 return {
   load_gif = load_gif,
-  DecodedGif = DecodedGif
+  DecodedGif = DecodedGif,
+  VERSION = VERSION
 }

@@ -1,4 +1,6 @@
 
+VERSION = "1.0.0"
+
 ffi = require "ffi"
 lib = require "giflib.lib"
 
@@ -193,4 +195,4 @@ load_gif = (fname) ->
   gif
 
 
-{ :load_gif, :DecodedGif }
+{ :load_gif, :DecodedGif, :VERSION }
