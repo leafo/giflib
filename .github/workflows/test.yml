@@ -22,14 +22,14 @@ jobs:
 
     - name: build
       run: |
-        wget http://downloads.sourceforge.net/project/giflib/giflib-5.1.1.tar.bz2
-        tar jxf giflib-5.1.1.tar.bz2
-        (cd giflib-5.1.1; ./configure; make)
+        wget https://downloads.sourceforge.net/project/giflib/giflib-6.x/giflib-6.1.3.tar.gz
+        tar xzf giflib-6.1.3.tar.gz
+        make -C giflib-6.1.3 libgif.so
         luarocks install moonscript
         luarocks install busted
         moonc .
 
     - name: test
       run: |
-        LD_LIBRARY_PATH=giflib-5.1.1/lib/.libs/ busted -o utfTerminal
+        LD_LIBRARY_PATH=giflib-6.1.3/ busted -o utfTerminal
 
