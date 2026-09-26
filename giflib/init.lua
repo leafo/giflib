@@ -1,4 +1,4 @@
-local VERSION = "1.0.0"
+local VERSION = "2.0.0"
 local ffi = require("ffi")
 local lib = require("giflib.lib")
 local GIF_ERROR = 0
