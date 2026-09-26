@@ -168,21 +168,23 @@ class DecodedGif
 
     copy_images = 1
 
-    -- spew/egifclosefile does does not free the memory of the saved images so
-    -- we use the same reference managed by the decoded gif, and an array
-    -- garbage collected by us
-    saved_images = ffi.new "SavedImage[?]", copy_images
+    -- GifMakeSavedImage deep copies onto the heap so EGifSpew can free it
     for i=0,copy_images - 1, 1
-      saved_images[i] = @gif.SavedImages[i]
+      src = @gif.SavedImages + i
+      copy = lib.GifMakeSavedImage dest, src
+      if copy == nil
+        return nil, "failed to copy saved image"
 
-    dest.SavedImages = saved_images
-    dest.ImageCount = copy_images
+      -- giflib 6 copies the extension blocks but leaves the count at 0
+      copy.ExtensionBlockCount = src.ExtensionBlockCount
 
-    if lib.EGifSpew(dest) == GIF_OK
-      ffi.gc dest, nil
+    -- EGifSpew closes and frees dest, even on failure
+    ffi.gc dest, nil
+
+    if lib.EGifSpew(dest, err) == GIF_OK
       true
     else
-      nil, "failed to spew gif"
+      nil, get_error err[0]
 
 load_gif = (fname) ->
   err = ffi.new "int[1]", 0

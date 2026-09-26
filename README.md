@@ -6,7 +6,7 @@ Lua bindings to [GIFLIB](http://giflib.sourceforge.net/) for LuaJIT using FFI.
 
 ## Installation
 
-You'll need both LuaJIT (any version) and GIFLIB 5 installed. On ArchLinux:
+You'll need both LuaJIT (any version) and GIFLIB 6 installed. On ArchLinux:
 
 ```bash
 $ sudo pacman -Sy luajit giflib

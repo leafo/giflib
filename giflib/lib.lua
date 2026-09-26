@@ -67,7 +67,7 @@ ffi.cdef([[  void *malloc(size_t size);
   GifFileType *EGifOpenFileName(const char *GifFileName, const bool GifTestExistence, int *Error);
   ColorMapObject *GifMakeMapObject(int ColorCount, const GifColorType *ColorMap);
   SavedImage *GifMakeSavedImage(GifFileType *GifFile, const SavedImage *CopyFrom);
-  int EGifSpew(GifFileType * GifFile);
+  int EGifSpew(GifFileType * GifFile, int *ErrorCode);
   int EGifCloseFile(GifFileType *GifFile, int *ErrorCode);
 
   void GifFreeSavedImages(GifFileType *GifFile);

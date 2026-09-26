@@ -181,17 +181,19 @@ do
         dest.SColorMap = lib.GifMakeMapObject(self.gif.SColorMap.ColorCount, self.gif.SColorMap.Colors)
       end
       local copy_images = 1
-      local saved_images = ffi.new("SavedImage[?]", copy_images)
       for i = 0, copy_images - 1, 1 do
-        saved_images[i] = self.gif.SavedImages[i]
+        local src = self.gif.SavedImages + i
+        local copy = lib.GifMakeSavedImage(dest, src)
+        if copy == nil then
+          return nil, "failed to copy saved image"
+        end
+        copy.ExtensionBlockCount = src.ExtensionBlockCount
       end
-      dest.SavedImages = saved_images
-      dest.ImageCount = copy_images
-      if lib.EGifSpew(dest) == GIF_OK then
-        ffi.gc(dest, nil)
+      ffi.gc(dest, nil)
+      if lib.EGifSpew(dest, err) == GIF_OK then
         return true
       else
-        return nil, "failed to spew gif"
+        return nil, get_error(err[0])
       end
     end
   }
